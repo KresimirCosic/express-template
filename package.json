@@ -1,0 +1,41 @@
+{
+  "name": "express-template",
+  "version": "0.0.1",
+  "description": "A template for ExpressJS with PostgreSQL and Typescript support in mind.",
+  "main": "./src/index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KresimirCosic/express-template.git"
+  },
+  "keywords": [
+    "javascript",
+    "typescript",
+    "node",
+    "nodejs",
+    "express",
+    "expressjs",
+    "postgresql",
+    "psql",
+    "sql",
+    "webpack",
+    "tls",
+    "ssl",
+    "openssl",
+    "http",
+    "https",
+    "shx",
+    "cross-env",
+    "server",
+    "ts-node",
+    "ts-node-dev"
+  ],
+  "author": "me",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/KresimirCosic/express-template/issues"
+  },
+  "homepage": "https://github.com/KresimirCosic/express-template#readme"
+}
