@@ -1,11 +1,13 @@
 {
   "name": "express-template",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A template for ExpressJS with PostgreSQL and Typescript support in mind.",
   "main": "./src/index.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "cross-env NODE_ENV=development ts-node-dev --exit-child --respawn --transpile-only --pretty ./src/index.ts"
+    "setup": "openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout ./src/certificate/cert.key -out ./src/certificate/cert.pem -config ./src/certificate/req.cnf -sha256",
+    "dev": "cross-env NODE_ENV=development ts-node-dev --exit-child --respawn --transpile-only --pretty ./src/index.ts",
+    "build": "cross-env NODE_ENV=production webpack && shx mkdir -p ./dist/public && shx cp ./src/certificate/cert.* ./dist/"
   },
   "repository": {
     "type": "git",
