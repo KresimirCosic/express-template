@@ -1,14 +1,14 @@
 {
   "name": "express-template",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "A template for ExpressJS with PostgreSQL and Typescript support in mind.",
   "main": "./src/index.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "setup": "openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout ./src/certificate/cert.key -out ./src/certificate/cert.pem -config ./src/certificate/req.cnf -sha256",
-    "dev": "cross-env NODE_ENV=development ts-node-dev --exit-child --respawn --transpile-only --pretty ./src/index.ts",
+    "dev": "cross-env NODE_ENV=development ts-node-dev --exit-child --respawn --transpile-only --pretty --require dotenv/config ./src/index.ts",
     "build": "cross-env NODE_ENV=production webpack && shx mkdir -p ./dist/public && shx cp ./src/certificate/cert.* ./dist/",
-    "serve": "cross-env NODE_ENV=production node ./dist/server.js"
+    "serve": "cross-env NODE_ENV=production node --require dotenv/config ./dist/server.js"
   },
   "repository": {
     "type": "git",
@@ -45,16 +45,20 @@
   "dependencies": {
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
     "express": "^4.17.1",
-    "lodash": "^4.17.21"
+    "lodash": "^4.17.21",
+    "pg": "^8.7.1"
   },
   "devDependencies": {
     "@types/chalk": "^2.2.0",
     "@types/cookie-parser": "^1.4.2",
     "@types/cors": "^2.8.12",
+    "@types/dotenv": "^8.2.0",
     "@types/express": "^4.17.13",
     "@types/lodash": "^4.14.176",
     "@types/node": "^16.11.6",
+    "@types/pg": "^8.6.1",
     "chalk": "^4.1.2",
     "cross-env": "^7.0.3",
     "shx": "^0.3.3",

@@ -1,8 +1,16 @@
 interface INodeJSWithEnvironmentVariables extends NodeJS.ProcessEnv {
   NODE_ENV: string;
+  DATABASE_USER: string;
+  DATABASE_USER_PASSWORD: string;
+  DATABASE_NAME: string;
 }
 
-export const { NODE_ENV } = process.env as INodeJSWithEnvironmentVariables;
+export const {
+  NODE_ENV,
+  DATABASE_USER,
+  DATABASE_USER_PASSWORD,
+  DATABASE_NAME,
+} = process.env as INodeJSWithEnvironmentVariables;
 
 export function isDevelopmentMode() {
   return NODE_ENV === 'development';
