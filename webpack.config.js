@@ -26,5 +26,5 @@ module.exports = {
   resolve: {
     extensions: ['.ts', '.js'],
   },
-  externals: [webpackNodeExternals],
+  externals: [webpackNodeExternals()],
 };
