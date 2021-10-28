@@ -1,22 +1,45 @@
 import chalk from 'chalk';
 
-import { SERVER_OPTIONS } from './environment';
-import { client } from './database';
+import { expressServerConfiguration } from './environment';
+import { ExpressPostgreSQLDatabaseConnection } from './database';
 
-function startServer() {
-  const INFO = `${chalk.blueBright.bold('[INFO]')} ${chalk(
-    'Server started on'
-  )} ${chalk.green.bold(`${SERVER_OPTIONS.url()}`)}`;
+class ExpressServer {
+  private _connection: ExpressPostgreSQLDatabaseConnection;
 
-  console.log(INFO);
-  client
-    .connect()
-    .then(() => {
-      console.log('Database connected!');
-    })
-    .catch((error) => {
-      console.error('Database connectione failed!', error);
+  get database(): ExpressPostgreSQLDatabaseConnection {
+    return this._connection;
+  }
+
+  constructor() {
+    this._connection = new ExpressPostgreSQLDatabaseConnection();
+
+    this.startServer();
+  }
+
+  startServer() {
+    const INFO = `${chalk.cyan('[INFO]')} ${chalk(
+      'Server started on'
+    )} ${chalk.green.bold(
+      `${expressServerConfiguration.serverOptions.url()}`
+    )}`;
+
+    console.log(INFO);
+
+    this.database.connection.connect((error) => {
+      if (error) {
+        console.error(
+          `${chalk.red('[ERROR]')} ${
+            error.message[0].toLocaleUpperCase() +
+            error.message.split('').splice(1).join('')
+          }`
+        );
+      } else {
+        console.log(
+          `${chalk.green('[INFO]')} Database connected successfully!`
+        );
+      }
     });
+  }
 }
 
-startServer();
+const expressServer = new ExpressServer();
