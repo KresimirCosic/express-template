@@ -20,3 +20,6 @@ export class ExpressPostgreSQLDatabaseConnection {
     return this._connection;
   }
 }
+
+export const expressPostgreSQLDatabaseConnection: ExpressPostgreSQLDatabaseConnection =
+  new ExpressPostgreSQLDatabaseConnection();
