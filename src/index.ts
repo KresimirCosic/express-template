@@ -1,7 +1,7 @@
-import chalk from 'chalk';
-
-import { expressServerConfiguration } from './environment';
+import { expressServerConfiguration } from './environment/configuration';
 import { ExpressPostgreSQLDatabaseConnection } from './database';
+
+import { messenger } from './utilities/messenger';
 
 class ExpressServer {
   private _connection: ExpressPostgreSQLDatabaseConnection;
@@ -17,29 +17,25 @@ class ExpressServer {
   }
 
   startServer() {
-    const INFO = `${chalk.cyan('[INFO]')} ${chalk(
-      'Server started on'
-    )} ${chalk.green.bold(
-      `${expressServerConfiguration.serverOptions.url()}`
-    )}`;
+    const { url } = expressServerConfiguration.serverOptions;
 
-    console.log(INFO);
+    console.log(messenger.info(`Server started on ${url()}`).message);
 
     this.database.connection.connect((error) => {
       if (error) {
-        console.error(
-          `${chalk.red('[ERROR]')} ${
-            error.message[0].toLocaleUpperCase() +
-            error.message.split('').splice(1).join('')
-          }`
+        const { message, payload } = messenger.warning<Error>(
+          error.message,
+          error
         );
+        console.error(message, payload);
       } else {
-        console.log(
-          `${chalk.green('[INFO]')} Database connected successfully!`
+        const { message } = messenger.success(
+          'Database connected successfully!'
         );
+        console.log(message);
       }
     });
   }
 }
 
-const expressServer = new ExpressServer();
+const expressServer: ExpressServer = new ExpressServer();
