@@ -44,8 +44,6 @@ export class ExpressServer {
     return new Promise((resolve, reject) => {
       if (isDevelopmentMode) {
         app.use(
-          '/api',
-          api,
           cors({
             credentials: true,
             origin: 'https://localhost:4200',
@@ -54,13 +52,12 @@ export class ExpressServer {
 
         app.listen(port);
 
+        app.use('/api', api);
+
         resolve();
       } else {
-        app.use(
-          '/api',
-          api,
-          express.static(path.resolve(__dirname, './public/index.html'))
-        );
+        app.use('/api', api);
+        app.use(express.static(path.resolve(__dirname, './public')));
 
         app.get('*', function (request, response) {
           response.sendFile(path.resolve(__dirname, './public/index.html'));
