@@ -19,7 +19,7 @@ export class ExpressServer {
   async startServer(): Promise<void> {
     const { url } = expressServerConfiguration.serverOptions;
 
-    return Promise.all([this.checkDatabaseConnection(), this.checkAPI()])
+    return Promise.all([this.checkDatabaseConnection(), this.setupAPI()])
       .then(() => {
         console.log(messenger.info(`Server started on ${url()}`).message);
       })
@@ -31,43 +31,6 @@ export class ExpressServer {
           ).message
         );
       });
-  }
-
-  async checkAPI(): Promise<void> {
-    const { SSLOptions, serverOptions, isDevelopmentMode } =
-      expressServerConfiguration;
-    const { port } = serverOptions;
-    const app = express();
-
-    app.use(cookieParser(), express.json());
-
-    return new Promise((resolve, reject) => {
-      if (isDevelopmentMode) {
-        app.use(
-          cors({
-            credentials: true,
-            origin: 'https://localhost:4200',
-          })
-        );
-
-        app.listen(port);
-
-        app.use('/api', api);
-
-        resolve();
-      } else {
-        app.use('/api', api);
-        app.use(express.static(path.resolve(__dirname, './public')));
-
-        app.get('*', function (request, response) {
-          response.sendFile(path.resolve(__dirname, './public/index.html'));
-        });
-
-        https.createServer(SSLOptions, app).listen(port);
-
-        resolve();
-      }
-    });
   }
 
   async checkDatabaseConnection(): Promise<void> {
@@ -86,5 +49,45 @@ export class ExpressServer {
         );
         console.error(message, payload);
       });
+  }
+
+  async setupAPI(): Promise<void> {
+    const { SSLOptions, serverOptions, isDevelopmentMode } =
+      expressServerConfiguration;
+    const { port } = serverOptions;
+    const app = express();
+
+    // general middleware
+    app.use(cookieParser());
+    app.use(express.json());
+
+    return new Promise((resolve, reject) => {
+      if (isDevelopmentMode) {
+        // development mode middleware
+        app.use(
+          cors({
+            credentials: true,
+            origin: 'https://localhost:4200',
+          })
+        );
+        app.use('/api', api);
+
+        app.listen(port);
+
+        resolve();
+      } else {
+        // production mode middleware
+        app.use('/api', api);
+        app.use(express.static(path.resolve(__dirname, './public')));
+
+        app.get('*', function (request, response) {
+          response.sendFile(path.resolve(__dirname, './public/index.html'));
+        });
+
+        https.createServer(SSLOptions, app).listen(port);
+
+        resolve();
+      }
+    });
   }
 }
